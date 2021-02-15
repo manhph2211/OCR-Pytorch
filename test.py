@@ -1,6 +1,7 @@
 import cv2
 import easyocr
 from utils import show_img,get_data
+import numpy as np
 
 
 def predict(img_paths):
@@ -10,8 +11,7 @@ def predict(img_paths):
 
 
 def evaluate(results,targets):
-	test=results-targets
-	print(test.count(0))
+	print(np.where(results==targets)/len(results))
 
 
 img_paths,targets=get_data()
