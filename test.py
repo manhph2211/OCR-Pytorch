@@ -11,10 +11,10 @@ def predict(img_paths):
 
 
 def evaluate(results,targets):
-	print(np.where(results==targets)/len(results))
+	print(len(np.where(results==targets))/len(results))
 
 
 img_paths,targets=get_data()
-results=predict(img_paths[0:3])
-evaluate(results,targets[0:3])
+results=predict(img_paths[1:5])
+evaluate(results,targets[1:5])
 

@@ -7,7 +7,7 @@ import numpy as np
 
 class make_dataset:
 
-	def __init__(self,img_paths,targets,resize=None):
+	def __init__(self,img_paths,targets,resize=True):
 		self.img_paths=img_paths
 		self.targets=targets
 		self.resize=resize
