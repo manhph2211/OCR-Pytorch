@@ -1,16 +1,16 @@
 import torch
 import torch.nn as nn
-from utils import get_data, encode_targets, split_data,remove_duplicates,decode_predictions
+from utils import get_data, encode_targets, split_data
 from dataloader import make_dataset
 from model import CaptchaModel
 import engine
-import numpy as np 
 
 
 def train(BATCH_SIZE,NUM_EPOCH,NUM_WORKERS=8):
 
 	img_paths,targets=get_data()
-	encode_targets_,class_num=encode_targets(targets)
+	encode_targets_,lbe=encode_targets(targets)
+	class_num=len(lbe.classes_)
 	X_train,y_train,X_val,y_val,X_test,y_test=split_data(img_paths,encode_targets_)
 
 	train_dataset=make_dataset(X_train,y_train)
@@ -29,7 +29,7 @@ def train(BATCH_SIZE,NUM_EPOCH,NUM_WORKERS=8):
     shuffle=True,
     )
 
-	device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+	device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 	model=CaptchaModel(num_chars=class_num)
 	model.to(device)	
@@ -41,16 +41,7 @@ def train(BATCH_SIZE,NUM_EPOCH,NUM_WORKERS=8):
 	for epoch in range(NUM_EPOCH):
 		train_loss = engine.train_fn(model, train_loader, optimizer,device,loss_fn)
 		valid_preds, test_loss = engine.eval_fn(model, val_loader,device,loss_fn)
-		valid_captcha_preds = []
-		for vp in valid_preds:
-			current_preds = decode_predictions(vp, lbl_enc)
-			valid_captcha_preds.extend(current_preds)    	
-		combined = list(zip(test_targets_orig, valid_captcha_preds))
-		print(combined[:10])
-		test_dup_rem = [remove_duplicates(c) for c in test_targets_orig]
-		accuracy = metrics.accuracy_score(test_dup_rem, valid_captcha_preds)  
-		print(f"Epoch={epoch}, Train Loss={train_loss}, Test Loss={test_loss} Accuracy={accuracy}")
+		print(f"Epoch={epoch}, Train Loss={train_loss}, Test Loss={test_loss} ")
 		scheduler.step(test_loss)
-
 if __name__ == "__main__":
     train(8,10)

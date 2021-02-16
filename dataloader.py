@@ -1,8 +1,6 @@
 import torch
 import cv2
-from torch.utils.data import Dataset
 from torchvision import transforms
-import numpy as np 
 
 
 class make_dataset:
