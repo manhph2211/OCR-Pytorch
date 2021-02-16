@@ -6,11 +6,13 @@ from model import CaptchaModel
 import engine
 
 
+
 def train(BATCH_SIZE,NUM_EPOCH,NUM_WORKERS=8):
 
 	img_paths,targets=get_data()
 	encode_targets_,lbe=encode_targets(targets)
 	class_num=len(lbe.classes_)
+	print("class_num",class_num)
 	X_train,y_train,X_val,y_val,X_test,y_test=split_data(img_paths,encode_targets_)
 
 	train_dataset=make_dataset(X_train,y_train)
@@ -36,11 +38,10 @@ def train(BATCH_SIZE,NUM_EPOCH,NUM_WORKERS=8):
 	optimizer = torch.optim.Adam(model.parameters(), lr=3e-4)
 
 	scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, factor=0.8, patience=5, verbose=True)
-	loss_fn = nn.CrossEntropyLoss()
-
+	
 	for epoch in range(NUM_EPOCH):
-		train_loss = engine.train_fn(model, train_loader, optimizer,device,loss_fn)
-		valid_preds, test_loss = engine.eval_fn(model, val_loader,device,loss_fn)
+		train_loss = engine.train_fn(model, train_loader, optimizer,device)
+		test_loss = engine.eval_fn(model, val_loader,device)
 		print(f"Epoch={epoch}, Train Loss={train_loss}, Test Loss={test_loss} ")
 		scheduler.step(test_loss)
 if __name__ == "__main__":

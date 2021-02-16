@@ -18,15 +18,16 @@ class CaptchaModel(nn.Module):
 
     def forward(self, images):
         bs, _, _, _ = images.size()  # 8x3x64x64
-        x = F.relu(self.conv_1(images)) # 8x`18x64x61
+        x = F.relu(self.conv_1(images)) # 8x18x64x61
         x = self.pool_1(x) # 8x128x52x30
         x = F.relu(self.conv_2(x))
-        x = self.pool_2(x)
+        x = self.pool_2(x) # 8x64x16x13
         x = x.permute(0, 3, 1, 2)
         x = x.view(bs, x.size(1), -1)# 8x13x1024
         x = F.relu(self.linear_1(x))
         x = self.drop_1(x)
         x, _ = self.lstm(x)
         x = self.output(x)# 8x13x19
-        print(x.shape)
+        x = x.permute(1, 0, 2)
+        #print(x.shape)
         return x

@@ -39,3 +39,4 @@ def split_data(img_paths,targets):
 	return X_train,y_train,X_val,y_val,X_test,y_test
 
 
+
