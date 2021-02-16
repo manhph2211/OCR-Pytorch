@@ -20,9 +20,9 @@ class make_dataset:
 	def __getitem__(self,idx):
 
 		img=cv2.imread(self.img_paths[idx])
+
 		if self.resize:
-			
-			img=img.resize(img,(64,64))
+			img=cv2.resize(img,(64,64))
 		img=torch.tensor(img, dtype=torch.float32)
 		img=img.permute(2, 0, 1)
 		img=self.transforms(img)

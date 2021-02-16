@@ -13,10 +13,11 @@ class CaptchaModel(nn.Module):
         self.linear_1 = nn.Linear(1152, 64)
         self.drop_1 = nn.Dropout(0.2)
         self.lstm = nn.GRU(64, 32, bidirectional=True, num_layers=2, dropout=0.25, batch_first=True)
-        self.output = nn.Linear(64, num_chars + 1)
+        self.output = nn.Linear(64, num_chars)
 
-    def forward(self, images, targets=None):
-        bs, _, _, _ = images.size()
+
+    def forward(self, images):
+        bs, _, _, _ = images.size()  # 8x3x64x64
         x = F.relu(self.conv_1(images))
         x = self.pool_1(x)
         x = F.relu(self.conv_2(x))
@@ -28,4 +29,5 @@ class CaptchaModel(nn.Module):
         x, _ = self.lstm(x)
         x = self.output(x)
         x = x.permute(1, 0, 2)
+        print(x.shape)
         return x
