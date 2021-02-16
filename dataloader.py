@@ -11,9 +11,7 @@ class make_dataset:
 		self.img_paths=img_paths
 		self.targets=targets
 		self.resize=resize
-        self.transforms=transforms.Compose([
-            transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
-        ])
+		self.transforms=transforms.Compose([transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
 
 
 	def __len__(self):
@@ -23,6 +21,7 @@ class make_dataset:
 
 		img=cv2.imread(self.img_paths[idx])
 		if self.resize:
+			
 			img=img.resize(img,(64,64))
 		img=torch.tensor(img, dtype=torch.float32)
 		img=img.permute(2, 0, 1)
