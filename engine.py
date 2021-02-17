@@ -2,7 +2,6 @@ from tqdm import tqdm
 from loss import ctc_loss
 
 
-
 def train_fn(model, data_loader, optimizer,device):
     model.train()
     fin_loss = 0

@@ -12,7 +12,7 @@ def train(BATCH_SIZE,NUM_EPOCH,NUM_WORKERS=8):
 	img_paths,targets=get_data()
 	encode_targets_,lbe=encode_targets(targets)
 	class_num=len(lbe.classes_)
-	print("class_num",class_num)
+	#print("class_num",class_num)
 	X_train,y_train,X_val,y_val,X_test,y_test=split_data(img_paths,encode_targets_)
 
 	train_dataset=make_dataset(X_train,y_train)
