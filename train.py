@@ -4,7 +4,7 @@ from utils import get_data, encode_targets, split_data
 from dataloader import make_dataset
 from model import CaptchaModel
 import engine
-
+import argparse
 
 
 def train(BATCH_SIZE,NUM_EPOCH,NUM_WORKERS=8):
@@ -44,5 +44,13 @@ def train(BATCH_SIZE,NUM_EPOCH,NUM_WORKERS=8):
 		test_loss = engine.eval_fn(model, val_loader,device)
 		print(f"Epoch={epoch}, Train Loss={train_loss}, Test Loss={test_loss} ")
 		scheduler.step(test_loss)
+
+
 if __name__ == "__main__":
-    train(8,10)
+	parser = argparse.ArgumentParser(
+	description='Hi, Im Max, this project predicts Captcha')
+	parser.add_argument('--batch-size', default=8, type=int,help='Batch size for training')
+	parser.add_argument('--num-epochs', '--epochs', default=30, type=int,help='The number epochs')
+	parser.add_argument('--num-workers', '--workers', default=8, type=int,help='Number of workers used in dataloading')               
+	args = parser.parse_args()
+	train(args.batch_size,args.num_epochs,args.num_workers)
